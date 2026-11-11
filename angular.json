@@ -55,7 +55,6 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/website_65435d28/",
               "budgets": [
                 {
                   "type": "initial",

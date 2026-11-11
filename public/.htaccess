@@ -1,8 +1,8 @@
 # Angular: redirige rutas internas a index.html (Apache / HostGator)
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  # La app vive en la subcarpeta /website_65435d28/ de public_html
-  RewriteBase /website_65435d28/
+  # academico.uets.edu.ec apunta a public_html/website_65435d28 (raíz del subdominio)
+  RewriteBase /
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
