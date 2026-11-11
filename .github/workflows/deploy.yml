@@ -56,7 +56,9 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
+          # FTPS falla en el canal de datos con el servidor de HostGator
+          # (tlsv1 alert decode error), por eso se usa FTP simple.
+          protocol: ftp
           port: 21
           local-dir: ./dist/
           # Ruta relativa a la raíz del usuario FTP (/home1/uets).
