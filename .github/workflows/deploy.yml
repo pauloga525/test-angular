@@ -61,6 +61,7 @@ jobs:
           protocol: ftp
           port: 21
           local-dir: ./dist/
-          # Ruta relativa a la raíz del usuario FTP (/home1/uets).
-          # Solo se tocan archivos dentro de esta carpeta.
-          server-dir: public_html/website_65435d28/
+          # La cuenta FTP ya entra directamente en
+          # /home1/uets/public_html/website_65435d28 (academico.uets.edu.ec),
+          # así que se sube a su raíz. No puede tocar otros sitios.
+          server-dir: ./
