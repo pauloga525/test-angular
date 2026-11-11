@@ -1,0 +1,64 @@
+name: CI/CD - HostGator
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Evita dos despliegues a la vez sobre la misma carpeta
+concurrency:
+  group: deploy-hostgator
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build (CI)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar producción
+        run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/prueba-deploy/browser/
+          include-hidden-files: true
+          retention-days: 7
+
+  deploy:
+    name: Deploy a HostGator (CD)
+    needs: build
+    # Solo despliega con push a main (o lanzado a mano), nunca desde un PR
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Subir por FTP solo a la carpeta del sitio
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./dist/
+          # Ruta relativa a la raíz del usuario FTP (/home1/uets).
+          # Solo se tocan archivos dentro de esta carpeta.
+          server-dir: public_html/website_65435d28/
